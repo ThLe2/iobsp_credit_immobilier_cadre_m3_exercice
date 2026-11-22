@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exercice d'entraînement — module 3</title><style>
+:root{--prune:#8C1E70;--prune-fonce:#5E1349;--prune-clair:#F4E6EE;--accent:#C77BAA;
+ --vert:#283C28;--gris:#3C3C3C;--gris-moyen:#8A7A85;--filet:#E8DCE5;--creme:#FAF6F8;
+ --ok:#2F7A4F;--ko:#B23B3B;--amb:#B5852A;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--creme);color:var(--gris);
+ font-family:"Nunito","Segoe UI",Helvetica,Arial,sans-serif;font-size:16px;line-height:1.6;
+ -webkit-user-select:none;-moz-user-select:none;user-select:none}
+.wrap{max-width:900px;margin:0 auto;padding:0 18px 60px}
+header.bandeau{background:var(--prune-fonce);color:#fff;padding:18px 0;border-bottom:4px solid var(--accent)}
+header.bandeau .wrap{padding-bottom:0}
+.chapitre{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:#EAD3E3}
+.chapitre span{color:var(--accent);margin:0 6px}
+h1{font-family:Georgia,"Times New Roman",serif;font-size:27px;line-height:1.25;margin:8px 0 4px;color:#fff}
+.sous{color:#EAD3E3;font-size:14.5px;margin:0}
+.consigne{background:var(--prune-clair);border-left:5px solid var(--prune);padding:14px 18px;
+ border-radius:0 8px 8px 0;margin:26px 0 8px;font-size:15px}
+.carte{background:#fff;border:1px solid var(--filet);border-radius:10px;padding:20px 22px;margin:18px 0;
+ box-shadow:0 1px 2px rgba(94,19,73,.05)}
+.etiq{display:inline-block;background:var(--prune-clair);color:var(--prune-fonce);font-size:11.5px;
+ letter-spacing:.09em;text-transform:uppercase;padding:3px 10px;border-radius:11px;font-weight:700;margin-bottom:10px}
+.enonce{font-weight:700;color:var(--vert);font-size:16.5px;margin:0 0 12px}
+.scenario{background:#FCF9FB;border:1px dashed var(--filet);border-radius:8px;padding:14px 16px;margin:0 0 14px;font-size:15px}
+.opts{list-style:none;margin:0;padding:0}
+.opts li{margin:7px 0}
+.opts label{display:flex;gap:10px;align-items:flex-start;padding:11px 14px;border:1.5px solid var(--filet);
+ border-radius:8px;cursor:pointer;background:#fff;transition:border-color .12s,background .12s}
+.opts label:hover{border-color:var(--accent);background:#FDF9FC}
+.opts input{margin-top:4px;accent-color:var(--prune);flex:0 0 auto}
+.opts label.bonne{border-color:var(--ok);background:#F1F8F3}
+.opts label.mauvaise{border-color:var(--ko);background:#FBF2F2}
+.fb{margin-top:14px;padding:13px 16px;border-radius:8px;font-size:14.7px;display:none}
+.fb.on{display:block}
+.fb.j{background:#F1F8F3;border-left:4px solid var(--ok)}
+.fb.n{background:#FBF2F2;border-left:4px solid var(--ko)}
+.fb .verdict{font-weight:800;display:block;margin-bottom:5px}
+.fb.j .verdict{color:var(--ok)}.fb.n .verdict{color:var(--ko)}
+.ref{display:inline-block;margin-top:8px;font-size:12.5px;color:var(--gris-moyen);font-style:italic}
+button{font-family:inherit;font-size:15px;font-weight:800;border:0;border-radius:8px;padding:12px 22px;cursor:pointer}
+button.principal{background:var(--prune);color:#fff}
+button.principal:hover{background:var(--prune-fonce)}
+button.principal:disabled{background:#D9CBD5;color:#fff;cursor:not-allowed}
+button.secondaire{background:#fff;color:var(--prune-fonce);border:1.5px solid var(--prune)}
+.barre-actions{display:flex;gap:12px;flex-wrap:wrap;margin:26px 0 0}
+.bilan{display:none;margin:28px 0 0;border-radius:12px;overflow:hidden;border:1px solid var(--filet);background:#fff}
+.bilan.on{display:block}
+.bilan .tete{padding:20px 24px;color:#fff;text-align:center}
+.bilan .tete .pct{font-family:Georgia,serif;font-size:40px;font-weight:700;line-height:1}
+.bilan .tete .lib{font-size:14px;letter-spacing:.11em;text-transform:uppercase;margin-top:6px;opacity:.92}
+.bilan .corps{padding:18px 24px;font-size:15px}
+.progression{height:7px;background:var(--filet);border-radius:4px;overflow:hidden;margin:22px 0 4px}
+.progression i{display:block;height:100%;background:var(--prune);width:0;transition:width .3s}
+.compteur{font-size:12.5px;color:var(--gris-moyen);text-align:right}
+input[type=number]{font-family:inherit;font-size:15.5px;padding:9px 12px;border:1.5px solid var(--filet);
+ border-radius:8px;background:#fff;color:var(--vert);font-weight:700;width:130px;
+ -webkit-user-select:text;-moz-user-select:text;user-select:text}
+input:focus{outline:0;border-color:var(--accent)}
+input.bon{border-color:var(--ok);background:#F1F8F3}
+input.faux{border-color:var(--ko);background:#FBF2F2}
+.ligne-reponse{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px}
+.ligne-reponse .unite{font-size:14.5px;color:var(--gris-moyen)}
+.reserve{display:flex;flex-wrap:wrap;gap:9px;padding:16px;background:#fff;border:1.5px dashed var(--accent);
+ border-radius:10px;min-height:64px;align-content:flex-start}
+.jeton{background:var(--prune-clair);border:1.5px solid var(--accent);color:var(--prune-fonce);
+ padding:8px 13px;border-radius:20px;font-size:14.3px;font-weight:700;cursor:grab;line-height:1.35}
+.jeton.actif{background:var(--prune);color:#fff;border-color:var(--prune-fonce);box-shadow:0 0 0 3px rgba(140,30,112,.18)}
+.jeton.bon{background:#EAF5EE;border-color:var(--ok);color:#1E5334}
+.jeton.faux{background:#FBF2F2;border-color:var(--ko);color:#8C2626}
+.zones{display:grid;gap:14px;margin-top:16px;grid-template-columns:repeat(auto-fit,minmax(215px,1fr))}
+.zone{background:#fff;border:1.5px solid var(--filet);border-radius:10px;padding:12px 14px;min-height:120px}
+.zone.survol{border-color:var(--prune);background:#FDF7FB}
+.zone h4{margin:0 0 4px;font-family:Georgia,serif;font-size:15.5px;color:var(--prune-fonce)}
+.zone .desc{font-size:12.7px;color:var(--gris-moyen);margin:0 0 10px;line-height:1.4}
+.zone .depot{display:flex;flex-wrap:wrap;gap:8px;min-height:44px}
+.aide{font-size:13.6px;color:var(--gris-moyen);margin-top:10px;font-style:italic}
+footer.pied{text-align:center;font-size:12.4px;color:var(--gris-moyen);padding:26px 18px 12px;
+ border-top:1px solid var(--filet);margin-top:44px}
+@media(max-width:560px){h1{font-size:22px}.carte{padding:16px 15px}.wrap{padding:0 13px 44px}}
+</style></head>
+<body>
+<header class="bandeau"><div class="wrap">
+ <div class="chapitre">IOBSP Niveau 2 · Journée 5 <span>/</span> Crédit immobilier (1/3) — Module 3</div><h1>Exercice d'entraînement — module 3</h1><p class="sous">3 activités · l'organisation de la publicité foncière · non noté · environ 18 min</p>
+</div></header>
+<div class="wrap">
+<div class="consigne"><b>🎯 Exercice d'entraînement.</b> Trois activités : distinguer ce que la publicité foncière fait de ce qu'elle ne fait pas, trancher huit situations, vérifier six affirmations. Le point à tenir : <b>elle ne crée aucun droit, elle rend opposable</b>. Aucune note n'est conservée et rien n'est à déposer.</div>
+<div class="progression"><i id="jauge"></i></div>
+<div class="compteur" id="compteur">0 / 22 réponses</div>
+<div class="carte"><span class="etiq">Activité 1 — Ce qu'elle fait, ce qu'elle ne fait pas</span><div class="scenario">Huit propositions. Quatre décrivent une fonction réelle de la publicité foncière ; quatre sont des erreurs courantes.</div><div class="reserve" id="reserve"><div class="jeton" draggable="true" data-id="j1">Rendre les droits réels immobiliers opposables aux tiers</div><div class="jeton" draggable="true" data-id="j2">Permettre à toute personne intéressée de connaître les charges d&#x27;un bien</div><div class="jeton" draggable="true" data-id="j3">Classer les créanciers inscrits sur un même immeuble</div><div class="jeton" draggable="true" data-id="j4">Assurer la traçabilité des mutations et la sécurité du marché</div><div class="jeton" draggable="true" data-id="j5">Créer le droit de propriété de l&#x27;acquéreur</div><div class="jeton" draggable="true" data-id="j6">Valider un acte irrégulier en le publiant</div><div class="jeton" draggable="true" data-id="j7">Garantir au créancier qu&#x27;il sera intégralement payé</div><div class="jeton" draggable="true" data-id="j8">Dispenser du recours à un acte authentique</div></div><p class="aide">Faites glisser les étiquettes, ou touchez une étiquette puis la colonne.</p><div class="zones deux"><div class="zone" data-zone="fait"><h4>Ce que la publicité foncière FAIT</h4><p class="desc">Ses fonctions réelles</p><div class="depot"></div></div><div class="zone" data-zone="nonfait"><h4>Ce qu'elle NE FAIT PAS</h4><p class="desc">Les erreurs courantes</p><div class="depot"></div></div></div><div class="fb" id="fbT"></div></div>
+<div class="carte"><span class="etiq">Activité 2 — Huit situations</span><div class="scenario">Des dossiers qui se bloquent, et pourquoi.</div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Un vendeur cède le même appartement à deux acquéreurs successifs. Le second acheteur publie son acte avant le premier. Qui l&#x27;emporte ?</p><ul class="opts"><li><label id="cl0_0"><input type="radio" name="ca0" value="0"><span>Le premier acheteur, dont l&#x27;acte est antérieur</span></label></li><li><label id="cl0_1"><input type="radio" name="ca0" value="1"><span>Le juge partage le bien entre les deux</span></label></li><li><label id="cl0_2"><input type="radio" name="ca0" value="2"><span>Aucun : les deux ventes sont nulles</span></label></li><li><label id="cl0_3"><input type="radio" name="ca0" value="3"><span>Le second acheteur, qui a publié le premier</span></label></li></ul><div class="fb" id="fca0"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Quel est l&#x27;effet principal de la publicité foncière ?</p><ul class="opts"><li><label id="cl1_0"><input type="radio" name="ca1" value="0"><span>Rendre les actes opposables aux tiers</span></label></li><li><label id="cl1_1"><input type="radio" name="ca1" value="1"><span>Créer le droit de propriété</span></label></li><li><label id="cl1_2"><input type="radio" name="ca1" value="2"><span>Valider les actes irréguliers</span></label></li><li><label id="cl1_3"><input type="radio" name="ca1" value="3"><span>Fixer le prix des transactions</span></label></li></ul><div class="fb" id="fca1"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Une cliente vend une maison héritée de sa mère, dont la succession n&#x27;a jamais donné lieu à attestation notariée publiée. Que va-t-il se passer ?</p><ul class="opts"><li><label id="cl2_0"><input type="radio" name="ca2" value="0"><span>Rien, la vente peut être publiée normalement</span></label></li><li><label id="cl2_1"><input type="radio" name="ca2" value="1"><span>La publication sera refusée tant que le titre du disposant n&#x27;aura pas été publié</span></label></li><li><label id="cl2_2"><input type="radio" name="ca2" value="2"><span>La vente sera publiée avec un rang dégradé</span></label></li><li><label id="cl2_3"><input type="radio" name="ca2" value="3"><span>Le notaire publiera d&#x27;office la succession en même temps</span></label></li></ul><div class="fb" id="fca2"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Deux inscriptions sont déposées le même jour sur le même immeuble : la banque A à 16 h 10 avec un acte du 6 avril, la banque B à 9 h 05 avec un acte du 10 avril. Qui prime ?</p><ul class="opts"><li><label id="cl3_0"><input type="radio" name="ca3" value="0"><span>La banque B, qui a déposé la première</span></label></li><li><label id="cl3_1"><input type="radio" name="ca3" value="1"><span>Elles sont à égalité de rang</span></label></li><li><label id="cl3_2"><input type="radio" name="ca3" value="2"><span>La banque A, dont le titre est le plus ancien</span></label></li><li><label id="cl3_3"><input type="radio" name="ca3" value="3"><span>Celle dont la créance est la plus élevée</span></label></li></ul><div class="fb" id="fca3"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Comment s&#x27;appelle aujourd&#x27;hui le service qui tient le fichier immobilier ?</p><ul class="opts"><li><label id="cl4_0"><input type="radio" name="ca4" value="0"><span>La conservation des hypothèques</span></label></li><li><label id="cl4_1"><input type="radio" name="ca4" value="1"><span>Le greffe du tribunal judiciaire</span></label></li><li><label id="cl4_2"><input type="radio" name="ca4" value="2"><span>Le cadastre</span></label></li><li><label id="cl4_3"><input type="radio" name="ca4" value="3"><span>Le service de la publicité foncière, qui a succédé au conservateur des hypothèques en 2013</span></label></li></ul><div class="fb" id="fca4"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Quel texte régit aujourd&#x27;hui la publicité foncière ?</p><ul class="opts"><li><label id="cl5_0"><input type="radio" name="ca5" value="0"><span>Le décret n° 55-22 du 4 janvier 1955</span></label></li><li><label id="cl5_1"><input type="radio" name="ca5" value="1"><span>Les articles 710-1 et suivants du code civil</span></label></li><li><label id="cl5_2"><input type="radio" name="ca5" value="2"><span>L&#x27;ordonnance du 19 juin 2024, entrée en vigueur en 2025</span></label></li><li><label id="cl5_3"><input type="radio" name="ca5" value="3"><span>La loi SRU du 13 décembre 2000</span></label></li></ul><div class="fb" id="fca5"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Un créancier inscrit en second rang sur un bien vendu 240 000 €, grevé de 200 000 € au premier rang et de 90 000 € au second. Que perçoit-il ?</p><ul class="opts"><li><label id="cl6_0"><input type="radio" name="ca6" value="0"><span>90 000 €, sa créance intégrale</span></label></li><li><label id="cl6_1"><input type="radio" name="ca6" value="1"><span>40 000 € au mieux, et il perd le solde</span></label></li><li><label id="cl6_2"><input type="radio" name="ca6" value="2"><span>45 000 €, la moitié</span></label></li><li><label id="cl6_3"><input type="radio" name="ca6" value="3"><span>Rien : seul le premier rang est payé</span></label></li></ul><div class="fb" id="fca6"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Pour être publié au fichier immobilier, un acte doit en principe être :</p><ul class="opts"><li><label id="cl7_0"><input type="radio" name="ca7" value="0"><span>Sous seing privé enregistré</span></label></li><li><label id="cl7_1"><input type="radio" name="ca7" value="1"><span>Simplement daté de façon certaine</span></label></li><li><label id="cl7_2"><input type="radio" name="ca7" value="2"><span>Authentique, c&#x27;est-à-dire notarié</span></label></li><li><label id="cl7_3"><input type="radio" name="ca7" value="3"><span>Contresigné par avocat</span></label></li></ul><div class="fb" id="fca7"></div></div></div>
+<div class="carte"><span class="etiq">Activité 3 — Vrai ou faux</span><div class="scenario">Six affirmations sur la publicité foncière.</div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">La publicité foncière est constitutive de droits.</p><ul class="opts"><li><label id="vl0_1"><input type="radio" name="vf0" value="1"><span>Vrai</span></label></li><li><label id="vl0_0"><input type="radio" name="vf0" value="0"><span>Faux</span></label></li></ul><div class="fb" id="fv0"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">L&#x27;hypothèque et sa radiation figurent parmi les actes soumis à publicité.</p><ul class="opts"><li><label id="vl1_1"><input type="radio" name="vf1" value="1"><span>Vrai</span></label></li><li><label id="vl1_0"><input type="radio" name="vf1" value="0"><span>Faux</span></label></li></ul><div class="fb" id="fv1"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">L&#x27;effet relatif impose que le titre du disposant ait été préalablement publié.</p><ul class="opts"><li><label id="vl2_1"><input type="radio" name="vf2" value="1"><span>Vrai</span></label></li><li><label id="vl2_0"><input type="radio" name="vf2" value="0"><span>Faux</span></label></li></ul><div class="fb" id="fv2"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">L&#x27;hypothèque légale spéciale du prêteur de deniers prend rang rétroactivement au jour de la vente.</p><ul class="opts"><li><label id="vl3_1"><input type="radio" name="vf3" value="1"><span>Vrai</span></label></li><li><label id="vl3_0"><input type="radio" name="vf3" value="0"><span>Faux</span></label></li></ul><div class="fb" id="fv3"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">L&#x27;ordonnance du 19 juin 2024 sur la publicité foncière est entrée en vigueur.</p><ul class="opts"><li><label id="vl4_1"><input type="radio" name="vf4" value="1"><span>Vrai</span></label></li><li><label id="vl4_0"><input type="radio" name="vf4" value="0"><span>Faux</span></label></li></ul><div class="fb" id="fv4"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Le fichier immobilier peut être interrogé aussi bien par immeuble que par personne.</p><ul class="opts"><li><label id="vl5_1"><input type="radio" name="vf5" value="1"><span>Vrai</span></label></li><li><label id="vl5_0"><input type="radio" name="vf5" value="0"><span>Faux</span></label></li></ul><div class="fb" id="fv5"></div></div></div>
+ <div class="bilan" id="bilan">
+  <div class="tete" id="bilan-tete"><div class="pct" id="bilan-pct">0 %</div><div class="lib" id="bilan-lib"></div></div>
+  <div class="corps" id="bilan-corps"></div>
+ </div>
+ <div class="barre-actions">
+  <button class="principal" id="btn-valider">Vérifier mes réponses</button>
+  <button class="secondaire" id="btn-refaire">Refaire l'exercice</button>
+ </div>
+</div>
+<footer class="pied">TMK Performances - N° Siret : 49841924100027 - Code NAF : 8559A</footer>
+<script>
+(function(){
+  function libre(e){ var t=e.target; return t && (t.tagName==='TEXTAREA'||t.tagName==='INPUT'); }
+  ['copy','cut','contextmenu'].forEach(function(ev){
+    document.addEventListener(ev,function(e){ if(!libre(e)) e.preventDefault(); });
+  });
+  document.addEventListener('keydown',function(e){
+    if(libre(e)) return;
+    var k=(e.key||'').toLowerCase();
+    if((e.ctrlKey||e.metaKey) && ['c','x','a','s','p','u'].indexOf(k)>-1) e.preventDefault();
+  });
+})();
+function palier(p){
+  if(p>=90) return {lib:'Excellent', c:'#2F7A4F'};
+  if(p>=70) return {lib:'Validé', c:'#3F7A5E'};
+  if(p>=50) return {lib:'À consolider', c:'#B5852A'};
+  return {lib:'À retravailler', c:'#B23B3B'};
+}
+function afficherBilan(bon,total,texte){
+  var p = total? Math.round(bon*100/total):0, pa=palier(p);
+  document.getElementById('bilan-tete').style.background=pa.c;
+  document.getElementById('bilan-pct').textContent=p+' %';
+  document.getElementById('bilan-lib').textContent=pa.lib+' — '+bon+' / '+total;
+  document.getElementById('bilan-corps').innerHTML=texte;
+  var b=document.getElementById('bilan'); b.classList.add('on');
+  b.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+
+var JZ={"j1": "fait", "j2": "fait", "j3": "fait", "j4": "fait", "j5": "nonfait", "j6": "nonfait", "j7": "nonfait", "j8": "nonfait"}, JL={"j1": "Rendre les droits réels immobiliers opposables aux tiers", "j2": "Permettre à toute personne intéressée de connaître les charges d'un bien", "j3": "Classer les créanciers inscrits sur un même immeuble", "j4": "Assurer la traçabilité des mutations et la sécurité du marché", "j5": "Créer le droit de propriété de l'acquéreur", "j6": "Valider un acte irrégulier en le publiant", "j7": "Garantir au créancier qu'il sera intégralement payé", "j8": "Dispenser du recours à un acte authentique"}, JE={"j1": "C'est l'effet principal de la publicité foncière, et la raison d'être du dispositif.", "j2": "La fonction d'information : le registre est public, et c'est de là que vient l'état hypothécaire.", "j3": "C'est le rang, déterminé par la date d'inscription. Il décide qui est payé en cas de vente forcée.", "j4": "La troisième fonction : la chaîne des titres publiés rend les transactions fiables.", "j5": "Non. La publicité foncière n'est PAS constitutive de droits : la propriété naît de l'acte, pas de sa publication.", "j6": "Non. La publication ne purge aucun vice : un acte nul publié reste nul.", "j7": "Non. Elle lui donne un rang. Si le prix de vente ne suffit pas, le créancier de second rang perd le solde.", "j8": "Non, c'est l'inverse : l'authenticité est en principe la condition d'accès au fichier immobilier."}, ZL={"fait": "Ce que la publicité foncière FAIT", "nonfait": "Ce qu'elle NE FAIT PAS"}, CS=[{"c": 3, "e": "Les deux ventes sont valables entre les parties. Mais seule la publication rend le droit opposable aux tiers — et le premier acheteur est un tiers à l'égard du second. La publicité foncière ne fabrique pas le droit : elle décide qui peut s'en prévaloir. Il reste au premier acheteur un recours contre le vendeur.", "opts": ["Le premier acheteur, dont l'acte est antérieur", "Le juge partage le bien entre les deux", "Aucun : les deux ventes sont nulles", "Le second acheteur, qui a publié le premier"]}, {"c": 0, "e": "Elle n'est pas constitutive de droits. Un droit non publié existe entre les parties, mais ne peut être opposé à ceux qui n'étaient pas à l'acte.", "opts": ["Rendre les actes opposables aux tiers", "Créer le droit de propriété", "Valider les actes irréguliers", "Fixer le prix des transactions"]}, {"c": 1, "e": "C'est l'effet relatif, posé par l'article 3 du décret du 4 janvier 1955 : aucun acte ne peut être publié si le titre du disposant n'a pas été préalablement publié. Il faut reconstituer la chaîne, ce qui prend des semaines — attention à la durée de validité de l'offre de prêt.", "opts": ["Rien, la vente peut être publiée normalement", "La publication sera refusée tant que le titre du disposant n'aura pas été publié", "La vente sera publiée avec un rang dégradé", "Le notaire publiera d'office la succession en même temps"]}, {"c": 2, "e": "Lorsque plusieurs formalités sont requises le même jour sur le même immeuble, celle qui est requise en vertu du titre dont la date est la plus ancienne prime, quel que soit l'ordre du registre des dépôts. Ce n'est pas l'heure de dépôt qui départage, c'est l'ancienneté du titre.", "opts": ["La banque B, qui a déposé la première", "Elles sont à égalité de rang", "La banque A, dont le titre est le plus ancien", "Celle dont la créance est la plus élevée"]}, {"c": 3, "e": "Le service de la publicité foncière a succédé au conservateur des hypothèques le 1er janvier 2013. L'appellation « conservation des hypothèques » n'a plus cours depuis plus de dix ans, même si elle circule encore.", "opts": ["La conservation des hypothèques", "Le greffe du tribunal judiciaire", "Le cadastre", "Le service de la publicité foncière, qui a succédé au conservateur des hypothèques en 2013"]}, {"c": 0, "e": "L'ordonnance du 19 juin 2024 devait codifier la matière aux articles 710-1 et suivants du code civil, mais elle est DEVENUE CADUQUE faute de ratification déposée avant le 20 septembre 2024. Le décret de 1955 reste le seul texte applicable.", "opts": ["Le décret n° 55-22 du 4 janvier 1955", "Les articles 710-1 et suivants du code civil", "L'ordonnance du 19 juin 2024, entrée en vigueur en 2025", "La loi SRU du 13 décembre 2000"]}, {"c": 1, "e": "Le premier inscrit est payé d'abord sur le prix. Il reste 40 000 € pour le second, qui perd les 50 000 € restants. C'est tout l'enjeu du rang : la publicité foncière ne garantit pas le paiement, elle donne une place dans la file.", "opts": ["90 000 €, sa créance intégrale", "40 000 € au mieux, et il perd le solde", "45 000 €, la moitié", "Rien : seul le premier rang est payé"]}, {"c": 2, "e": "C'est le principe d'authenticité. Il éclaire le module précédent : le monopole du notaire n'est pas une rente de situation, c'est la condition d'accès au fichier immobilier.", "opts": ["Sous seing privé enregistré", "Simplement daté de façon certaine", "Authentique, c'est-à-dire notarié", "Contresigné par avocat"]}], VF=[{"r": false, "e": "Faux, et c'est le point essentiel du module. Elle ne crée rien : elle rend opposable. Le droit naît de l'acte, la publication décide seulement qui peut s'en prévaloir.", "ref": "décret n° 55-22 du 4 janvier 1955"}, {"r": true, "e": "Exact. S'y ajoutent notamment les ventes, donations, successions, servitudes, actes constitutifs de copropriété, divisions parcellaires, saisies et commandements valant saisie.", "ref": "décret du 4 janvier 1955"}, {"r": true, "e": "Exact. C'est l'article 3 du décret : la chaîne des titres publiés doit être ininterrompue. Un maillon manquant bloque la publication, et donc la vente.", "ref": "art. 3 du décret du 4 janvier 1955"}, {"r": false, "e": "Faux depuis la réforme des sûretés du 15 septembre 2021 : elle prend rang à la date de l'inscription. C'est l'un des changements apportés par cette réforme, vu en journée 6.", "ref": "ord. n° 2021-1192 du 15 septembre 2021"}, {"r": false, "e": "Faux. Elle a été publiée mais elle est devenue caduque : le projet de loi de ratification n'a pas été déposé avant le 20 septembre 2024. Elle n'entrera pas en vigueur ; le décret de 1955 s'applique.", "ref": "ord. n° 2024-562 du 19 juin 2024 (caduque) · Constitution, art. 38"}, {"r": true, "e": "Exact. Cette double entrée permet de savoir quelles charges pèsent sur un bien, et quels biens possède une personne. C'est ce qui rend l'état hypothécaire possible.", "ref": "fichier immobilier"}];
+var NJ=Object.keys(JZ).length, valide=false, actif=null;
+var TOTAL = NJ + CS.length + VF.length;
+function placesJ(){ return document.querySelectorAll('.zone .depot .jeton').length; }
+function progresse(){
+  var n = placesJ();
+  for(var i=0;i<CS.length;i++){ if(document.querySelector('input[name="ca'+i+'"]:checked')) n++; }
+  for(var m=0;m<VF.length;m++){ if(document.querySelector('input[name="vf'+m+'"]:checked')) n++; }
+  document.getElementById('jauge').style.width = Math.round(n*100/TOTAL)+'%';
+  document.getElementById('compteur').textContent = n+' / '+TOTAL+' réponses';
+  document.getElementById('btn-valider').disabled = (n<TOTAL) || (placesJ()!==NJ) || valide;
+}
+document.querySelectorAll('input[type=radio]').forEach(function(x){ x.addEventListener('change', progresse); });
+function deselect(){ if(actif){ actif.classList.remove('actif'); actif=null; } }
+function deposer(j,c){ if(valide) return; c.appendChild(j); deselect(); progresse(); }
+var res=document.getElementById('reserve');
+document.querySelectorAll('.jeton').forEach(function(j){
+  j.addEventListener('click', function(e){
+    if(valide) return; e.stopPropagation();
+    if(actif && actif!==j){
+      var c=j.parentElement;
+      if(c.classList.contains('depot')||c.classList.contains('reserve')){ deposer(actif,c); return; }
+    }
+    if(j.parentElement.classList.contains('depot')){ deposer(j,res); return; }
+    if(actif===j){ deselect(); return; }
+    deselect(); actif=j; j.classList.add('actif');
+  });
+  j.addEventListener('dragstart', function(e){
+    if(valide){ e.preventDefault(); return; }
+    actif=j; e.dataTransfer.setData('text/plain', j.dataset.id);
+  });
+});
+document.querySelectorAll('.zone').forEach(function(z){
+  var dep=z.querySelector('.depot');
+  z.addEventListener('dragover', function(e){ if(!valide){ e.preventDefault(); z.classList.add('survol'); } });
+  z.addEventListener('dragleave', function(){ z.classList.remove('survol'); });
+  z.addEventListener('drop', function(e){ e.preventDefault(); z.classList.remove('survol'); if(actif) deposer(actif,dep); });
+  z.addEventListener('click', function(){ if(actif) deposer(actif,dep); });
+});
+res.addEventListener('dragover', function(e){ if(!valide) e.preventDefault(); });
+res.addEventListener('drop', function(e){ e.preventDefault(); if(actif) deposer(actif,res); });
+res.addEventListener('click', function(){ if(actif) deposer(actif,res); });
+document.body.addEventListener('click', deselect);
+
+document.getElementById('btn-valider').addEventListener('click', function(e){
+  e.stopPropagation();
+  if(valide) return; valide=true; deselect();
+  var bon=0, bonJ=0, li='';
+  Object.keys(JZ).forEach(function(id){
+    var j=document.querySelector('.jeton[data-id="'+id+'"]');
+    var z=j.closest('.zone'), juste = z && z.dataset.zone===JZ[id];
+    j.classList.add(juste?'bon':'faux'); j.setAttribute('draggable','false');
+    if(juste) bonJ++; else li += '<li><b>'+JL[id]+'</b> → '+ZL[JZ[id]]+'. '+JE[id]+'</li>';
+  });
+  bon += bonJ;
+  var ft=document.getElementById('fbT');
+  ft.innerHTML='<span class="verdict">'+(bonJ===NJ?'✓ La distinction est acquise':'✗ '+bonJ+' / '+NJ+' bien classées')+'</span>'
+    + (li ? '<b>À corriger :</b><ul style="margin:8px 0 0;padding-left:20px">'+li+'</ul>'
+          : 'Elle ne fabrique pas le droit : elle décide qui peut s\'en prévaloir.');
+  ft.className='fb on '+(bonJ===NJ?'j':'n');
+  for(var i=0;i<CS.length;i++){
+    var ch=document.querySelector('input[name="ca'+i+'"]:checked');
+    var idx=ch?parseInt(ch.value,10):-1, juste3=(idx===CS[i].c);
+    if(juste3) bon++;
+    document.getElementById('cl'+i+'_'+CS[i].c).classList.add('bonne');
+    if(!juste3 && idx>=0) document.getElementById('cl'+i+'_'+idx).classList.add('mauvaise');
+    document.querySelectorAll('input[name="ca'+i+'"]').forEach(function(r){ r.disabled=true; });
+    var f3=document.getElementById('fca'+i);
+    var h3='<span class="verdict">'+(juste3?'✓ Exact':'✗ Inexact')+'</span>';
+    if(!juste3) h3 += '<div style="margin-bottom:6px"><b>Réponse attendue :</b> '+CS[i].opts[CS[i].c]+'</div>';
+    f3.innerHTML = h3 + CS[i].e;
+    f3.className='fb on '+(juste3?'j':'n');
+  }
+  for(var m=0;m<VF.length;m++){
+    var ch2=document.querySelector('input[name="vf'+m+'"]:checked');
+    var rep=ch2?(ch2.value==='1'):null, juste4=(rep===VF[m].r);
+    if(juste4) bon++;
+    document.getElementById('vl'+m+'_'+(VF[m].r?1:0)).classList.add('bonne');
+    if(!juste4 && ch2) document.getElementById('vl'+m+'_'+ch2.value).classList.add('mauvaise');
+    document.querySelectorAll('input[name="vf'+m+'"]').forEach(function(r){ r.disabled=true; });
+    var f4=document.getElementById('fv'+m);
+    f4.innerHTML='<span class="verdict">'+(juste4?'✓ Exact':'✗ Inexact')+'</span>'+VF[m].e
+               +'<span class="ref">'+VF[m].ref+'</span>';
+    f4.className='fb on '+(juste4?'j':'n');
+  }
+  document.getElementById('btn-valider').disabled=true;
+  document.getElementById('btn-valider').textContent='Atelier validé';
+  afficherBilan(bon, TOTAL,
+    'Cet exercice n\'est pas noté et ne laisse aucune trace : refaites-le autant de fois que nécessaire. '
+    + 'Les trois repères : <b>elle rend opposable, elle ne crée rien</b> · <b>pas de publication sans titre du '
+    + 'disposant publié</b> · <b>le même jour, c\'est la date du titre qui prime, pas l\'heure du dépôt</b>. '
+    + 'Et le texte applicable reste le <b>décret du 4 janvier 1955</b> : la réforme de 2024 n\'est pas en '
+    + 'vigueur. Quand les trois activités passent sans hésitation, enchaînez sur le <b>QCM du module 3</b>.');
+});
+progresse();
+
+document.getElementById('btn-refaire').addEventListener('click',function(){ location.reload(); });
+</script></body></html>
